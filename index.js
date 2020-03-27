@@ -1,35 +1,26 @@
-const express = require('express')
-const redis= require('redis')
-const bodyparser = require('body-parser')
+const express = require('express');
+const redis = require('redis');
+const bodyParser = require('body-parser');
+const config = require('../sac-redis/config');
 
-const client = redis.createClient({
- host: "test2.k5ujjq.0001.apn2.cache.amazonaws.com",
- port: 6379,
- db: 0
- });
+const app = express()
 
- const app = express();
 
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({extended: false}))
+
+// app configuration 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/test', async (req, res) => {
-  console.log('access');
-
-  await client.set('test2','aaaaa', (err, res) => {
-  	console.log('err : ', err);
-  	console.log('res : ', res);
-  })
-
-  await client.get('test2', (err, value) => {
-   console.log(err);
-   console.log(value);
-  })
-
-  res.status(200).send({message: 'test'});
+  
 })
-
 
 app.listen(3000, () => {
-  console.log('server port opening');
+  console.log(`server port 3000, server is running now`)
 })
+
+module.exports = app
+
+
+
+
