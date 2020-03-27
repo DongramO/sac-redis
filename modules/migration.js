@@ -1,6 +1,6 @@
 const config = require('../config');
 const { promisify } = require("util");
-const getAsync = promisify(client.get).bind(client);
+const redis = require('redis');
 
   // const rClient= redis.createClient(config.rankingConfig);  
   // const uClient= redis.createClient(config.userConfig);  
@@ -15,43 +15,34 @@ const migration = (target, db) => {
 
     
   const targetClient= redis.createClient(configOption);
+  console.log(targetClient);
+  
   const getAsync = promisify(targetClient.keys).bind(targetClient);
   
   let allkeys = null;  
-  getAsync.then((keys) => {
+  getAsync('*').then(keys => {
     allkeys = keys
     
     for(var i = 0, len = keys.length; i < len; i++) {
       console.log("check elements keys : " , allkeys[i]);
-      targetClient.hgetAll
-      mClient.hset(allkeys[i], [value], (err, res) => {
+     
+	 // 동기처리 해줘야함 현재 비동기로 작동 중 
+	  targetClient.get(keys[i], (err, value) => {
+	  	console.log("error : ", err);
+		console.log(value);
+	  })
+      
+	  //mClient.hset(allkeys[i], [value], (err, res) => {
 
-      })
+      
     }
-    console.log(res);
+    console.log("mmm", keys);
 
   }).catch((err) => {
     console.log(err);
   });
 
-  await client.get("test", (err, value) => {
-    if(err) {
-      res.status(500).json({
-        message: "redis connetion error",
-        info: err,
-      })
-
-      return;
-    }
-
-    console.log("print value ", value);
-
-  })
-
   console.log(2);
-  res.status(200).json({
-    message: 'return ok'
-  });
 }
 
 
@@ -68,3 +59,7 @@ const migration = (target, db) => {
 // client.hmset("key", "foo", "bar", function(err, res) {
 //   // ...
 // });
+//
+//
+
+module.exports = migration
