@@ -16,11 +16,15 @@ const migration = async (target, db) => {
 
   const targetClient= redis.createClient(configOption);
   const getAsync = promisify(mClient.keys).bind(mClient);
-  const getMigrationClient = promisify(mClient.get).bind(mClient);
-  const hgetMigrationClient = promisify(mClient.hgetall).bind(mClient);
-  const setClient = promisify(tClient.set).bind(tClient);
-  const hsetClient = promisify(tClient.set).bind(tClient);
   const typeCheck = promisify(mClient.type).bind(mClient);
+  const getMigrationClient = promisify(mClient.get).bind(mClient);
+  const smemMigrationClient = promisify(mClient.smembers).bind(mClient);
+  const hgetMigrationClient = promisify(mClient.hgetall).bind(mClient);
+  
+  const setClient = promisify(tClient.set).bind(tClient);
+  const saddClient = promisify(tClient.sadd).bind(tClient);
+  const hsetClient = promisify(tClient.hset).bind(tClient);
+  
 
   let allkeys = null;  
 
@@ -38,7 +42,7 @@ const migration = async (target, db) => {
           await hgetMigrationClient(allkeys[i]).then( async(value) => {         
             console.log("keys ====>" , allkeys[i], " value ====>" , value)             
             
-            await setClient(allkeys[i], value).then((value) => {})
+            await hsetClient(allkeys[i], value).then((value) => {})
   
             .catch(err => {
               console.log("last err: ", err);
@@ -48,10 +52,10 @@ const migration = async (target, db) => {
 
         } else if (type === 'set') {
           
-          await hgetMigrationClient(allkeys[i]).then( async(value) => {         
+          await smemMigrationClient(allkeys[i]).then(async(value) => {         
             console.log("keys ====>" , allkeys[i], " value ====>" , value)             
             
-            await setClient(allkeys[i], value).then((value) => {})
+            await saddClient(allkeys[i], value).then((value) => {})
   
             .catch(err => {
               console.log("last err: ", err);
@@ -71,7 +75,6 @@ const migration = async (target, db) => {
               return;
             })      
           })
-
         } else {
 
         }
