@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/test', async (req, res) => {
 	console.log("test1");
-	await migration("ranking", 1)
+	await migration("user", 1)
 	console.log("tess2");
 
 	res.status(200).json({

@@ -8,13 +8,15 @@ const redis = require('redis');
 
 const migration = async (target, db) => {
   const mClient = redis.createClient(config.user);  
-  const tClient = redis.createClient(config.migrationConfig);
-  
-  configOption = config[target]
-  
+ 
+
+  if(target) configOption = config[target]
   if(db !== null || db !== undefined ) configOption.db = db
 
-  const targetClient= redis.createClient(configOption);
+  console.log(configOption)
+
+  const tClient = redis.createClient(configOption)
+
   const getAsync = promisify(mClient.keys).bind(mClient);
   const typeCheck = promisify(mClient.type).bind(mClient);
   const getMigrationClient = promisify(mClient.get).bind(mClient);
@@ -23,7 +25,7 @@ const migration = async (target, db) => {
   
   const setClient = promisify(tClient.set).bind(tClient);
   const saddClient = promisify(tClient.sadd).bind(tClient);
-  const hsetClient = promisify(tClient.hset).bind(tClient);
+  const hsetClient = promisify(tClient.hmset).bind(tClient);
   
 
   let allkeys = null;  
@@ -35,12 +37,13 @@ const migration = async (target, db) => {
 
     for(let i=0; i<allkeys.length; ++i) {
       await typeCheck(allkeys[i]).then(async type => {
+        
         console.log("type : ", type)	
         
         if(type === 'hash') {
           
           await hgetMigrationClient(allkeys[i]).then( async(value) => {         
-            console.log("keys ====>" , allkeys[i], " value ====>" , value)             
+            console.log("keys ====>" , allkeys[i], " value ====>" , value)
             
             await hsetClient(allkeys[i], value).then((value) => {})
   
@@ -88,22 +91,5 @@ const migration = async (target, db) => {
 
   console.log(2);
 }
-
-
-// client.hmset(["key", "foo", "bar"], function(err, res) {
-//   // ...
-// });
-
-// // Works the same as
-// client.hmset("key", ["foo", "bar"], function(err, res) {
-//   // ...
-// });
-
-// // Or
-// client.hmset("key", "foo", "bar", function(err, res) {
-//   // ...
-// });
-//
-//
 
 module.exports = migration

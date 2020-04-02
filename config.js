@@ -11,8 +11,8 @@ const shard = {
 }
 
 const user = {
-  host: "test2.k5ujjq.0001.apn2.cache.amazonaws.com",
-  port: 16311,
+  host: "localhost",
+  port: 6379,
   db: 0, 
 }
 
