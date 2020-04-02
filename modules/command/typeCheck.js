@@ -6,9 +6,8 @@ const typeCheck = async (originClient, key, callback) => {
 
     const client = promisify(originClient.type).bind(originClient);
     
-    await client(key)
+    return await client(key)
     .then(type => {
-        console.log("key type : ", type);
         return type
     })
     .catch(err => {

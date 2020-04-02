@@ -5,23 +5,27 @@ const redis = require('redis');
 const hgetCommand = async (originClient, key) => {
   const client = promisify(originClient.hgetall).bind(originClient);
 
-  await client(key)
+  return await client(key)
   .then(value => value)
-  .catch(err)
+  .catch(err => err)
 }
   
 const hsetCommand = async (originClient, key, value) => {
-  const client = promisify(originClient.hset).bind(originClient);
+  const client = promisify(originClient.hmset).bind(originClient);
 
-  await client(key, value)
+  console.log("key, value pair", key," : ",value)
+  return await client(key, value)
   .then(value => value)
-  .catch(err)     
+  .catch(err => {
+  	console.log(err)
+	return err
+  })
 }
 
-const hgetset = async (originClient, key) => {
+const hgetset = async (originClient, targetClient, key) => {
 
   const value = await hgetCommand(originClient, key)
-  await hsetCommand(originClient, key, value);
+  return await hsetCommand(targetClient, key, value);
 }
 
 module.exports = hgetset;

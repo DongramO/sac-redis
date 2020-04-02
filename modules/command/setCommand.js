@@ -5,17 +5,17 @@ const redis = require('redis');
 const smemCommand = async (originClient, key) => {
   const client = promisify(originClient.smembers).bind(originClient);
 
-  await client(key)
+  return await client(key)
   .then(value => value)
-  .catch(err)
+  .catch(err => err)
 }
   
 const saddCommand = async (targetClient, key, value) => {
   const client = promisify(targetClient.sadd).bind(targetClient);
 
-  await client(key, value)
+  return await client(key, value)
   .then(value => value)
-  .catch(err)     
+  .catch(err => err)     
 }
 
 const setCommand = async (originClient, targetClient, key) => {
