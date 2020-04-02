@@ -22,7 +22,7 @@ const admin = {
   db: 0, 
 }
 
-const migrationConfig = {
+const migration = {
   host: "test2.k5ujjq.0001.apn2.cache.amazonaws.com",
   port: 6379,
   db: 0, 

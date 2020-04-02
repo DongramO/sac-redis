@@ -12,10 +12,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/test', async (req, res) => {
-	console.log("test1");
-	await migration("user", 1)
-	console.log("tess2");
-
+	await migration("user", "migration", 1)
 	res.status(200).json({
 		message: "complete"
 	})
