@@ -17,8 +17,11 @@ const migration = async (target, db) => {
   const targetClient= redis.createClient(configOption);
   const getAsync = promisify(mClient.keys).bind(mClient);
   const getMigrationClient = promisify(mClient.get).bind(mClient);
+  const hgetMigrationClient = promisify(mClient.hgetall).bind(mClient);
   const setClient = promisify(tClient.set).bind(tClient);
+  const hsetClient = promisify(tClient.set).bind(tClient);
   const typeCheck = promisify(mClient.type).bind(mClient);
+
   let allkeys = null;  
 
   await getAsync('*').then(async (keys) => {
@@ -27,19 +30,51 @@ const migration = async (target, db) => {
   	console.log("size : ", allkeys.length);
 
     for(let i=0; i<allkeys.length; ++i) {
-      await typeCheck(allkeys[i]).then(async value => {
-		console.log("type : ", value)	
-		await getMigrationClient(allkeys[i]).then( async(value) => {         
-		    console.log("keys ====>" , allkeys[i], " value ====>" , value)            
-			await setClient(allkeys[i], value).then((value) => {
-		
-			})
-			.catch(err => {
-				console.log("last err: ", err);
-				return;
-			})      
-		})
+      await typeCheck(allkeys[i]).then(async type => {
+        console.log("type : ", type)	
+        
+        if(type === 'hash') {
+          
+          await hgetMigrationClient(allkeys[i]).then( async(value) => {         
+            console.log("keys ====>" , allkeys[i], " value ====>" , value)             
+            
+            await setClient(allkeys[i], value).then((value) => {})
+  
+            .catch(err => {
+              console.log("last err: ", err);
+              return;
+            })      
+          })
 
+        } else if (type === 'set') {
+          
+          await hgetMigrationClient(allkeys[i]).then( async(value) => {         
+            console.log("keys ====>" , allkeys[i], " value ====>" , value)             
+            
+            await setClient(allkeys[i], value).then((value) => {})
+  
+            .catch(err => {
+              console.log("last err: ", err);
+              return;
+            })      
+          })
+
+        } else if (type === 'string') {
+          
+          await getMigrationClient(allkeys[i]).then( async(value) => {         
+            console.log("keys ====>" , allkeys[i], " value ====>" , value)             
+            
+            await setClient(allkeys[i], value).then((value) => {})
+  
+            .catch(err => {
+              console.log("last err: ", err);
+              return;
+            })      
+          })
+
+        } else {
+
+        }
 	  }).catch(err => {})   
       }
     })
