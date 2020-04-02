@@ -2,10 +2,6 @@ const config = require('../config');
 const { promisify } = require("util");
 const redis = require('redis');
 
-  // const rClient= redis.createClient(config.rankingConfig);  
-  // const uClient= redis.createClient(config.userConfig);  
-  // const aClient= redis.createClient(config.adminConfig);  
-
 const migration = async (target, db) => {
   const mClient = redis.createClient(config.user);  
  
@@ -19,6 +15,7 @@ const migration = async (target, db) => {
 
   const getAsync = promisify(mClient.keys).bind(mClient);
   const typeCheck = promisify(mClient.type).bind(mClient);
+
   const getMigrationClient = promisify(mClient.get).bind(mClient);
   const smemMigrationClient = promisify(mClient.smembers).bind(mClient);
   const hgetMigrationClient = promisify(mClient.hgetall).bind(mClient);
