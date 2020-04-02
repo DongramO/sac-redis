@@ -8,26 +8,38 @@ const redis = require('redis');
 
 const migration = async (target, db) => {
   const mClient = redis.createClient(config.migrationConfig);  
+  const tClient = redis.createClient(config.user);
   
   configOption = config[target]
   
   if(db !== null || db !== undefined ) configOption.db = db
 
-    
   const targetClient= redis.createClient(configOption);
-  
-  const getAsync = promisify(targetClient.keys).bind(targetClient);
-  const getClient = promisify(targetClient.get).bind(targetClient);
+  const getAsync = promisify(mClient.keys).bind(mClient);
+  //const getClient = promisify(targetClient.hset).bind(targetClient);
 
   let allkeys = null;  
+
   await getAsync('*').then(async (keys) => {
+    
     allkeys = keys
-    console.log("mmm", allkeys);
-
-	await getClient(allkeys[0]).then((err, value) => {
-		console.log('bbb')
-	})
-
+  
+    for(let i=0; i<allkeys.length; ++i) {
+      await getAsync(allkeys[i]).then((err, value) => {
+        if(err) {
+          console.log(err)
+          break;
+        }
+        
+        await tClient.get(allkeys[i], (err, value) => {
+          console.log("err : ", err)
+          console.log("value : ", value)
+        })
+        
+        
+      })
+    }
+	  
   }).catch((err) => {
     console.log(err);
   });
