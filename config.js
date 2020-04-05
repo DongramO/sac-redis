@@ -13,7 +13,7 @@ const shard = {
 const user = {
   host: "localhost",
   port: 6379,
-  db: 0, 
+  db: 1, 
 }
 
 const admin = {
@@ -33,5 +33,5 @@ module.exports = {
   shard,
   user,
   admin,
-  migrationConfig,
+  migration,
 }

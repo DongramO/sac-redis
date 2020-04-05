@@ -1,7 +1,7 @@
 const express = require('express');
 const redis = require('redis');
 const bodyParser = require('body-parser');
-const migration = require('./modules/migration');
+const migration = require('./modules/newMigration');
 
 const app = express()
 
