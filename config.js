@@ -13,7 +13,7 @@ const shard = {
 const user = {
   host: "localhost",
   port: 6379,
-  db: 1, 
+  db: 0, 
 }
 
 const admin = {
@@ -23,8 +23,8 @@ const admin = {
 }
 
 const migration = {
-  host: "test2.k5ujjq.0001.apn2.cache.amazonaws.com",
-  port: 6379,
+  host: "localhost",
+  port: 6380,
   db: 0, 
 }
 

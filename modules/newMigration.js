@@ -11,6 +11,8 @@ const { getset, getKeys } = require('./command/common')
 
 const migration = async (origin, target, db) => {
   
+  console.log('access migration function')
+
   const originClient = redis.createClient(config[origin]);  
 
   if(target) configOption = config[target]
@@ -20,13 +22,12 @@ const migration = async (origin, target, db) => {
 
   const allkeys = await getKeys(originClient)
 
-  console.log(allkeys.length)
   let type = null
   for(let i=0; i<allkeys.length; ++i) {
 
     key = allkeys[i];  
     type = await typecheck(originClient, key);
-    console.log(type);
+    
     if(type === 'hash') {
       await hgetset(originClient, targetClient, key)
 
