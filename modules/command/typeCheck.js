@@ -7,13 +7,8 @@ const typeCheck = async (originClient, key, callback) => {
     const client = promisify(originClient.type).bind(originClient);
     
     return await client(key)
-    .then(type => {
-        return type
-    })
-    .catch(err => {
-        console.log(err);
-        return err
-    }) 
+    .then(type => type)
+    .catch(err => throws(err))
 }
 
 module.exports = typeCheck;

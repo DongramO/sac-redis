@@ -1,45 +1,45 @@
-const express = require('express');
+
+require('dotenv').config()
+
 const redis = require('redis');
-const bodyParser = require('body-parser');
 const migration = require('./modules/newMigration');
+const config = require('./config');
 
-const app = express()
-
-
-
-// app configuration 
-// app.use(bodyParser.json())
-// app.use(bodyParser.urlencoded({ extended: false }))
-
-// app.get('/test', async (req, res) => {
-// 	await migration("user", "migration", 0)
-// 	res.status(200).json({
-// 		message: "complete"
-// 	})
-// })
 
 const main = async () => {
 	console.log('start proccess')
-	const err = await migration("user", "migration", 0);
 
-	if(err) {
+	let origin = null
+	let target = null
+
+	console.log('check target')
+	process.argv.forEach((item, index) => {
+	
+		// origin 
+		if(index === 2) {
+			origin = config[item]
+			console.log('original config \n', origin);
+		}
+
+		// target
+		if(index === 3) {
+			target = config[item];
+			console.log('target config \n', target);
+		}
+			
+	})
+
+	const originClient = redis.createClient(origin);  
+	const targetClient = redis.createClient(target)
+	
+	const result = await migration(originClient, targetClient);
+
+	if(result) {
 		console.log('err : ', err)
 	}
-	console.log('end proccess')
+
+	console.log('exit migration proccess')
 	process.exit();
 }
 
-
 main();
-
-
-
-// app.listen(4000, () => {
-//   console.log(`server port 3000, server is running now`)
-// })
-
-module.exports = app
-
-
-
-

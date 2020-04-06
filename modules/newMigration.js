@@ -9,40 +9,42 @@ const { getset, getKeys } = require('./command/common')
 
 
 
-const migration = async (origin, target, db) => {
+const migration = async (originClient, targetClient) => {
   
   console.log('access migration function')
 
-  const originClient = redis.createClient(config[origin]);  
-
-  if(target) configOption = config[target]
-  if(db !== null || db !== undefined ) configOption.db = db
-
-  const targetClient = redis.createClient(configOption)
-
   const allkeys = await getKeys(originClient)
 
+  console.log('total orgi\'s allkeys count is : ', allkeys.length);
   let type = null
-  for(let i=0; i<allkeys.length; ++i) {
 
-    key = allkeys[i];  
-    type = await typecheck(originClient, key);
-    
-    if(type === 'hash') {
-      await hgetset(originClient, targetClient, key)
+  try {
+    for(let i=0; i<allkeys.length; ++i) {
 
-    } else if(type === 'set') {
-      await setCommand(originClient, targetClient, key)
-
-    } else if(type === 'list') {
-
-    } else if(type === 'string') {
-	  await getset(originClient, targetClient, key)
-
-    } else {
-
+      console.log('progress ====> ', ((i/allkeys.length) * 100).toFixed(2));
+      
+      key = allkeys[i];  
+      type = await typecheck(originClient, key);
+      
+      if(type === 'hash') {
+        await hgetset(originClient, targetClient, key)
+  
+      } else if(type === 'set') {
+        await setCommand(originClient, targetClient, key)
+  
+      } else if(type === 'list') {
+  
+      } else if(type === 'string') {
+        await getset(originClient, targetClient, key)
+  
+      } else {
+  
+      }
     }
+  } catch(e) {
+    console.log(e)
   }
+  
 }
 
 module.exports = migration

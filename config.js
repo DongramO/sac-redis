@@ -1,37 +1,51 @@
 const ranking = {
-  host: "test2.k5ujjq.0001.apn2.cache.amazonaws.com",
-  port: 6379,
-  db: 0, 
+  host: process.env.RANKING_HOST,
+  port: process.env.RANKING_PORT,
+  db: process.env.RANKING_DB, 
 }
 
 const shard = {
-  host: "test2.k5ujjq.0001.apn2.cache.amazonaws.com",
-  port: 6379,
-  db: 0, 
+  host: process.env.SHARD_HOST,
+  port: process.env.SHARD_PORT,
+  db: process.env.SHARD_DB, 
 }
 
-const user = {
-  host: "localhost",
-  port: 6379,
-  db: 0, 
+const user1 = {
+  host: process.env.USER1_HOST,
+  port: process.env.USER1_PORT,
+  db: process.env.USER1_DB, 
+}
+
+const user2 = {
+  host: process.env.USER2_HOST,
+  port: process.env.USER2_PORT,
+  db: process.env.USER2_DB, 
+}
+
+const user3 = {
+  host: process.env.USER3_HOST,
+  port: process.env.USER3_PORT,
+  db: process.env.USER3_DB, 
 }
 
 const admin = {
-  host: "test2.k5ujjq.0001.apn2.cache.amazonaws.com",
-  port: 16301,
-  db: 0, 
+  host: process.env.ADMIN_HOST,
+  port: process.env.ADMIN_PORT,
+  db: process.env.ADMIN_DB, 
 }
 
-const migration = {
-  host: "localhost",
-  port: 6380,
-  db: 0, 
+const target = {
+  host: process.env.TARGET_HOST,
+  port: process.env.TARGET_PORT,
+  db: process.env.TARGET_DB, 
 }
 
 module.exports = {
   ranking,
   shard,
-  user,
+  user1,
+  user2,
+  user3,
   admin,
-  migration,
+  target,
 }

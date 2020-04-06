@@ -7,7 +7,7 @@ const smemCommand = async (originClient, key) => {
 
   return await client(key)
   .then(value => value)
-  .catch(err => err)
+  .catch(err => throws(err))
 }
   
 const saddCommand = async (targetClient, key, value) => {
@@ -15,7 +15,7 @@ const saddCommand = async (targetClient, key, value) => {
 
   return await client(key, value)
   .then(value => value)
-  .catch(err => err)     
+  .catch(err => throws(err)) 
 }
 
 const setCommand = async (originClient, targetClient, key) => {

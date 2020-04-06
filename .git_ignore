@@ -62,4 +62,6 @@ typings/
 .next
 
 # remove config files
-config/
+#config/
+.env
+

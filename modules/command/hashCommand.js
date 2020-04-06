@@ -7,7 +7,7 @@ const hgetCommand = async (originClient, key) => {
 
   return await client(key)
   .then(value => value)
-  .catch(err => err)
+  .catch(err => throws(err))
 }
   
 const hsetCommand = async (originClient, key, value) => {
@@ -16,10 +16,7 @@ const hsetCommand = async (originClient, key, value) => {
   console.log("key, value pair", key," : ",value)
   return await client(key, value)
   .then(value => value)
-  .catch(err => {
-  	console.log(err)
-	return err
-  })
+  .catch(err => throws(err))
 }
 
 const hgetset = async (originClient, targetClient, key) => {

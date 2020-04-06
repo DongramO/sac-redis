@@ -7,7 +7,7 @@ const getCommand = async (originClient, key) => {
 
   return await client(key)
   .then(value => {console.log(value); return value})
-  .catch(err=> err)
+  .catch(err => throws(err))
 }
   
 const setCommand = async (targetClient, key, value) => {
@@ -15,7 +15,7 @@ const setCommand = async (targetClient, key, value) => {
 
   return await client(key, value)
   .then(value => value)
-  .catch(err => err)     
+  .catch(err => throws(err))    
 }
 
 const getset = async (originClient, targetClient, key) => {
@@ -29,9 +29,7 @@ const getKeys = async (originClient) => {
 
   return await client('*')
     .then(keys => keys)
-    .catch(err => {
-      console.log(err)
-    })
+    .catch(err => throws(err))
 }
 
 module.exports = {
